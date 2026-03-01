@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced CV Generator</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#eef2ff;
+    margin:0;
+    padding:20px;
+}
+
+/* Main Container */
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Inputs */
+input, textarea{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+/* Buttons */
+button{
+    padding:12px 18px;
+    border:none;
+    background:#4a6cf7;
+    color:white;
+    font-size:16px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+button:hover{
+    background:#3451d1;
+}
+
+/* CV Preview */
+#cvPreview{
+    margin-top:30px;
+    padding:25px;
+    border-radius:15px;
+    border:2px solid #4a6cf7;
+    background:white;
+}
+
+/* Profile Image */
+#previewImg{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #4a6cf7;
+}
+.DashBoard{
+    width: 20%;
+    height: 100vh;
+    background-color: #3451d1;
+    color: black;
+    margin: 0;
+    padding: 0;
+}
+
+</style>
+</head>
+
+<body>
+        <div class="DashBoard">
+            <i class="fa-solid fa-house"> <h3>For You</h3></i>
+            <i class="fa-regular fa-compass"></i><h3>Home</h3>
+            <h3>Activity</h3>
+            <h3>Uplaod</h3>
+            <h3>Like</h3>
+            <h3>Following💓</h3>
+]           <h3>Freind</h3>
+        </div>
+
+<div class="container">
+
+<h2>📝 Advanced CV Generator</h2>
+
+<input type="file" id="photo" accept="image/*">
+
+<input type="text" id="name" placeholder="Full Name">
+<input type="email" id="email" placeholder="Email">
+<input type="text" id="phone" placeholder="Phone Number">
+
+<textarea id="education" placeholder="Education"></textarea>
+<textarea id="skills" placeholder="Skills (comma separated)"></textarea>
+<textarea id="experience" placeholder="Experience"></textarea>
+
+<button onclick="generateCV()">Generate CV</button>
+<button onclick="downloadCV()">Download CV</button>
+
+<div id="cvPreview"></div>
+
+</div>
+<div>
+    <div>
+        <h2>Login</h2>
+        <div>
+            <span aria-valuetext="email">Email</span>
+            <input type="email" placeholder="Email Is required">
+            <br>
+            <span>Password</span>
+            <input type="password" placeholder="Password Is required">
+            <br>
+            <br>
+            <a href="#">Forget Password</a>
+            <br>
+            <button onclick="Login()">Login</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+let profileImage="";
+
+document.getElementById("photo").addEventListener("change",function(){
+
+let file=this.files[0];
+
+if(file){
+    let reader=new FileReader();
+
+    reader.onload=function(e){
+        profileImage=e.target.result;
+    }
+
+    reader.readAsDataURL(file);
+}
+
+});
+
+function generateCV(){
+
+let name=document.getElementById("name").value;
+let email=document.getElementById("email").value;
+let phone=document.getElementById("phone").value;
+let education=document.getElementById("education").value;
+let skills=document.getElementById("skills").value;
+let experience=document.getElementById("experience").value;
+
+let imgTag= profileImage ? `<img id="previewImg" src="${profileImage}">` : "";
+
+let cvHTML=`
+<div style="text-align:center">
+${imgTag}
+<h2>${name}</h2>
+<p>${email} | ${phone}</p>
+</div>
+
+<h3>📚 Education</h3>
+<p>${education}</p>
+
+<h3>💡 Skills</h3>
+<ul>
+${skills.split(",").map(s=>`<li>${s}</li>`).join("")}
+</ul>
+
+<h3>💼 Experience</h3>
+<p>${experience}</p>
+`;
+
+document.getElementById("cvPreview").innerHTML=cvHTML;
+localStorage.setItem("cvData",cvHTML);
+
+}
+
+function downloadCV(){
+let content=document.getElementById("cvPreview").innerHTML;
+
+let win=window.open();
+win.document.write(`
+<html>
+<head>
+<title>CV Download</title>
+</head>
+
+<body>
+${content}
+<script>
+window.print();
+<\/script>
+</body>
+</html>
+`);
+}
+
+window.onload=function(){
+let data=localStorage.getItem("cvData");
+if(data){
+document.getElementById("cvPreview").innerHTML=data;
+}
+}
+
+</script>
+
+</body>
+</html>
